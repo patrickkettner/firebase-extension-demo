@@ -1,0 +1,17 @@
+{
+  "name": "firebase-ext",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile:signInWithPopup": "npx rollup ./signInWithPopup/signInWithPopup.js --config ./rollup.config.mjs -o ./signInWithPopup/signInWithPopup_background.js",
+    "compile:signInWithEmailLink": "npx rollup ./signInWithEmailLink/signInWithEmailLink.js --config ./rollup.config.mjs -o ./signInWithEmailLink/compiled.js",
+    "compile:signInWithRedirect": "npx rollup ./signInWithRedirect/signInWithRedirect.js --config ./rollup.config.mjs -o ./signInWithRedirect/signInWithRedirect_background.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.3.1"
+  }
+}

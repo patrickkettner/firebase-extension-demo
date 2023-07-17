@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hello, World!</title>
+  <script>
+    let loaded = false;
+    async function displayMessage ({origin}) {
+      if (!loaded && origin.startsWith('chrome-extension')) {
+        const script = document.createElement('script');
+        script.src = `${origin}/signInWithPopup_background.js`
+        document.head.appendChild(script);
+      }
+    }
+
+    // when iframe receives a message, this runs and adds the background script to the page to request all of the firebase shit
+    window.addEventListener("message", displayMessage, false);
+  </script>
+</head>
+<body>
+  <h1>Hello, World!</h1>
+</body>
+</html>

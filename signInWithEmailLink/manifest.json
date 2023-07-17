@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Firebase Auth - signInWithEmailLink",
+  "description": "This sample shows how to authorize Firebase via signInWithEmailLink in a Chrome extension with manifest v3",
+  "version": "0.1",
+  "background": {
+    "service_worker": "compiled.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["callback.html"],
+      "matches": [ "https://positive-fanatical-machine.glitch.me/*" ]
+    }
+  ]
+}

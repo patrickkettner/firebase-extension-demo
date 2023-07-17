@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- 
+This file is just a local copy of the file hosted at https://positive-fanatical-machine.glitch.me/signInWithEmailLink.html
+It is included only for reference - updating it here does nothing.
+-->
+<html>
+  <head>
+    <title>signInWithEmailLink redirector</title>
+    <script>
+      (async () => {
+        try {
+          const EXTENSION_ID = "epppinehgieeokdpbcpijmckgbgjiifj";
+          // try to load the signInWithEmailLink demo extension. If it fails, log an error. If it works, open the bundled html page
+          const canLoad = await fetch(`chrome-extension://${EXTENSION_ID}/callback.html`);
+
+          const urlParams = new URLSearchParams(self.location.search);
+          const cb = urlParams.get('cb');
+          urlParams.delete('cb');
+          location.href=`${cb}?${urlParams}`
+        } catch (e) {
+          const div = document.querySelector("div");
+          div.innerText =
+            "Either the signInWithEmailLink demo extension is not installed, or the `EXTENSION_ID` is incorrect.";
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div>signInWithEmailLink</div>
+  </body>
+</html>

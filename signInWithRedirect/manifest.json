@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Firebase Auth - signInWithRedirect",
+  "description": "This sample shows how to authorize Firebase via signInWithRedirect in a Chrome extension with manifest v3",
+  "version": "0.1",
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "permissions": [
+    "offscreen"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [ "signInWithRedirect_background.js" ],
+      "matches": [ "https://positive-fanatical-machine.glitch.me/*" ]
+    }
+  ]
+}
