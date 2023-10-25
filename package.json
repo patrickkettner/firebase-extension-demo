@@ -6,12 +6,14 @@
   "scripts": {
     "compile:signInWithPopup": "npx rollup ./signInWithPopup/signInWithPopup.js --config ./rollup.config.mjs -o ./signInWithPopup/signInWithPopup_background.js",
     "compile:signInWithEmailLink": "npx rollup ./signInWithEmailLink/signInWithEmailLink.js --config ./rollup.config.mjs -o ./signInWithEmailLink/compiled.js",
+    "compile:signInWithEmailAndPassword": "npx rollup ./signInWithEmailAndPassword/signInWithEmailAndPassword.js --config ./rollup.config.mjs -o ./signInWithEmailAndPassword/compiled.js",
     "compile:signInWithRedirect": "npx rollup ./signInWithRedirect/signInWithRedirect.js --config ./rollup.config.mjs -o ./signInWithRedirect/signInWithRedirect_background.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "firebase": "^10.4.0",
     "node-fetch": "^3.3.1"
   }
 }

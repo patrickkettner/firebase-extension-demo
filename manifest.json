@@ -14,9 +14,9 @@
     ]
   },
   "background": {
-    "service_worker": "service_worker.js"
+    "service_worker": "index.js"
   },
-  "permissions": ["offscreen"],
+  "permissions": ["offscreen", "identity"],
   "web_accessible_resources": [
     {
       "resources": [ "signInWithPopup_background.js" ],

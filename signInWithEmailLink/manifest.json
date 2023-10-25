@@ -9,7 +9,7 @@
   "web_accessible_resources": [
     {
       "resources": ["callback.html"],
-      "matches": [ "https://positive-fanatical-machine.glitch.me/*" ]
+      "matches": [ "<all_urls>" ]
     }
   ]
 }

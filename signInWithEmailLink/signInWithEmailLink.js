@@ -1,6 +1,6 @@
 import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import firebaseConfig from './firebaseConfig.js'
+import firebaseConfig from '../firebaseConfig.js'
 
 // TODO make a suer input for this rather than hardcoded
 const email  = 'patrick@patrickkettner.com';
@@ -10,9 +10,12 @@ initializeApp(firebaseConfig)
 
 const auth = getAuth();
 
+console.log('e;kjansdfk;jasndfkjasndflkjansdlkjfnasdkljfnalksdjnf');
+console.log(chrome.runtime.getURL('callback.html'))
+
 if (typeof ServiceWorkerGlobalScope !== 'undefined') {
   const actionCodeSettings = {
-    url: `https://positive-fanatical-machine.glitch.me/signInWithEmailLink.html?cb=${encodeURIComponent(chrome.runtime.getURL('callback.html'))}`,
+    url: chrome.runtime.getURL('callback.html'),
     handleCodeInApp: true
   };
 

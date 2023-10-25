@@ -1,3 +1,12 @@
+async function funk() {
+  const token = await chrome.identity.getAuthToken({interactive: true})
+  console.log(token);
+  return token
+}
+
+
+funk();
+/*
 import { signInWithRedirect, signInWithPopup, GoogleAuthProvider, getAuth, signInWithPhoneNumber, PhoneAuthProvider, RecaptchaVerifier , signInWithCredential} from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
@@ -62,13 +71,4 @@ const bar = await signInWithCredential(auth, foo);
 console.log('vvv foo vvv');
 console.log(foo);
 
-/*
-async function funk() {
-  const token = await chrome.identity.getAuthToken({interactive: true})
-  console.log(token);
-  return token
-}
-
-
-funk();
 */

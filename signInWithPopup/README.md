@@ -5,7 +5,7 @@ This recipe shows how to authorize Firebase via [signInWithPopup][1] in a Chrome
 ## Overview
 
 There are a number of ways to authenticate using Firebase, some more complex than others.
-`signInWithPopup` requires a popup to be displayed to your user. Additionally, many Firebase authentication methods need to asyncronously load sub dependencies. Manifest v3 extensions are required to package code they need to run within their extension. 
+`signInWithPopup` requires a popup to be displayed to your user. Additionally, many Firebase authentication methods need to asyncronously load sub dependencies. Manifest v3 extensions are required to package code they need to run within their extension.
 
 To get around these incompatibilities, our [service worker][3] connects to an [offscreenDocument][2]. That document creates an iframe that connects to the remote web service, which loads a compiled version of our [`signInWithPopup` wrapper][5] directly from our extension. This would normally be blocked by the browser, but we allow for this specific remote web service to connect to this specific file by specifying [web_accessible_resources][6] in our manifest.json. Once the compiled script has been loaded inside of the iframe, the firebase code is execute in the context of the remote web service. As a result, it is no longer blocked by the strict CORS rules used in Manifest v3.
 
