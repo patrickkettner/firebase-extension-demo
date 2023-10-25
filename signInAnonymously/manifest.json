@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "Firebase Auth - signInAnonymously",
+  "description": "This sample shows how to authorize Firebase via signInAnonymously in a Chrome extension with manifest v3",
+  "version": "0.1",
+  "background": {
+    "service_worker": "compiled.js"
+  }
+}

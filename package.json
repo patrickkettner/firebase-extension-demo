@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile:signInWithPopup": "npx rollup ./signInWithPopup/signInWithPopup.js --config ./rollup.config.mjs -o ./signInWithPopup/signInWithPopup_background.js",
-    "compile:signInWithEmailLink": "npx rollup ./signInWithEmailLink/signInWithEmailLink.js --config ./rollup.config.mjs -o ./signInWithEmailLink/compiled.js",
+    "compile:signInWithCredential": "npx rollup ./signInWithCredential/signInWithCredential.js --config ./rollup.config.mjs -o ./signInWithCredential/compiled.js",
     "compile:signInWithEmailAndPassword": "npx rollup ./signInWithEmailAndPassword/signInWithEmailAndPassword.js --config ./rollup.config.mjs -o ./signInWithEmailAndPassword/compiled.js",
+    "compile:signInAnonymously": "npx rollup ./signInAnonymously/signInAnonymously.js --config ./rollup.config.mjs -o ./signInAnonymously/compiled.js",
+    "compile:signInWithEmailLink": "npx rollup ./signInWithEmailLink/signInWithEmailLink.js --config ./rollup.config.mjs -o ./signInWithEmailLink/compiled.js",
+    "compile:signInWithPhoneNumber": "npx rollup ./signInWithPhoneNumber/signInWithPhoneNumber.js --config ./rollup.config.mjs -o ./signInWithPhoneNumber/compiled.js",
+    "compile:signInWithPopup": "npx rollup ./signInWithPopup/signInWithPopup.js --config ./rollup.config.mjs -o ./signInWithPopup/signInWithPopup_background.js",
     "compile:signInWithRedirect": "npx rollup ./signInWithRedirect/signInWithRedirect.js --config ./rollup.config.mjs -o ./signInWithRedirect/signInWithRedirect_background.js"
   },
   "keywords": [],
