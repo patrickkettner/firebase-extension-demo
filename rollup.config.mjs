@@ -1,7 +1,8 @@
-import { existsSync } from 'fs';
 import fetch from 'node-fetch';
 import { env } from "node:process";
-
+import { existsSync } from 'fs';
+import {generate} from 'astring';
+import {walk} from 'estree-walker';
 
 async function getLatestPackageVersions(packageName) {
   const response = await fetch(`https://registry.npmjs.org/${packageName}`);
@@ -19,6 +20,27 @@ const LATEST_VERSION = await getLatestPackageVersions('firebase');
 
 const REMOTE_FIREBASE_URL = `https://www.gstatic.com/firebasejs/${LATEST_VERSION}`;
 
+// For some cases Firebase always includes reCaptcha, even though it is not used
+// for most auth flows. This is a problem becuase reCaptcha must be loaded from
+// the CDN - it cannot be bundled.
+// While you could load the code via an iframe or web document, that complicates
+// the build. So in cases where reCaptcha is not used, we remove the code from
+// the generated Firebase code by modifying the AST.
+function removeLoadJS(originalAST) {
+  const ast = walk(originalAST, {
+    enter: function(node, parent, prop, index) {
+      if ((node.type === 'FunctionDeclaration' && node.id.name === '_loadJS')
+        ||
+        (node.type === 'ExpressionStatement' && node.expression?.callee?.object?.callee?.object?.callee?.name === '_loadJS')
+      ) {
+        this.remove();
+      }
+    }
+  })
+
+  return generate(ast);
+}
+
 export default {
   plugins: [{
       transform: function transform(code, id) {
@@ -27,8 +49,13 @@ export default {
         // be full remote URLs
         code = code.replace(/(\.\/)?(?:@?firebase\/)([a-zA-Z]+)/g, `${REMOTE_FIREBASE_URL}/firebase-$2.js`)
 
-        // if a TOKEN is provided, replace it in the code
-        code = code.replace(/\/\* TOKEN \*\//g, `"${env.signInWithCustomToken_CUSTOM_TOKEN}"`)
+        if (env.AUTH_BUILD === 'signInWithCustomToken') {
+          // if a TOKEN is provided, replace it in the code
+          code = code.replace(/\/\* TOKEN \*\//g, `"${env.signInWithCustomToken_CUSTOM_TOKEN}"`)
+        } else if (env.AUTH_BUILD === 'signInWithEmailAndPassword') {
+          code = removeLoadJS(this.parse(code));
+        }
+
         return code
       },
       resolveDynamicImport: function(importee) {

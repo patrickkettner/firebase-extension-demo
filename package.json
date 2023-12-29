@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "compile:signInWithCredential": "npx rollup ./signInWithCredential/signInWithCredential.js --config ./rollup.config.mjs -o ./signInWithCredential/signInWithCredential_background.js",
-    "compile:signInWithCustomToken": "signInWithCustomToken_CUSTOM_TOKEN=`node ./signInWithCustomToken/getToken.js` npx rollup ./signInWithCustomToken/signInWithCustomToken.js --config ./rollup.config.mjs -o ./signInWithCustomToken/compiled.js",
-    "compile:signInWithEmailAndPassword": "npx rollup ./signInWithEmailAndPassword/signInWithEmailAndPassword.js --config ./rollup.config.mjs -o ./signInWithEmailAndPassword/compiled.js",
+    "compile:signInWithCustomToken": "AUTH_BUILD='signInWithCustomToken' signInWithCustomToken_CUSTOM_TOKEN=`node ./signInWithCustomToken/getToken.js` npx rollup ./signInWithCustomToken/signInWithCustomToken.js --config ./rollup.config.mjs -o ./signInWithCustomToken/compiled.js",
+    "compile:signInWithEmailAndPassword": "AUTH_BUILD='signInWithEmailAndPassword' npx rollup ./signInWithEmailAndPassword/signInWithEmailAndPassword.js --config ./rollup.config.mjs -o ./signInWithEmailAndPassword/compiled.js",
     "compile:signInAnonymously": "npx rollup ./signInAnonymously/signInAnonymously.js --config ./rollup.config.mjs -o ./signInAnonymously/compiled.js",
     "compile:signInWithEmailLink": "npx rollup ./signInWithEmailLink/signInWithEmailLink.js --config ./rollup.config.mjs -o ./signInWithEmailLink/compiled.js",
     "compile:signInWithPhoneNumber": "npx rollup ./signInWithPhoneNumber/signInWithPhoneNumber.js --config ./rollup.config.mjs -o ./signInWithPhoneNumber/compiled.js",
@@ -21,10 +21,9 @@
     "googleapis": "^129.0.0",
     "inquirer": "^9.2.12",
     "node-fetch": "^3.3.1",
-    "rollup": "^4.6.0"
-  },
-  "devDependencies": {
-    "firebase-admin": "^12.0.0",
-    "open": "^10.0.2"
+    "rollup": "^4.6.0",
+    "astring": "^1.8.6",
+    "estree-walker": "^3.0.3",
+    "firebase-admin": "^12.0.0"
   }
 }
