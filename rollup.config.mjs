@@ -1,5 +1,7 @@
 import { existsSync } from 'fs';
 import fetch from 'node-fetch';
+import { env } from "node:process";
+
 
 async function getLatestPackageVersions(packageName) {
   const response = await fetch(`https://registry.npmjs.org/${packageName}`);
@@ -23,7 +25,11 @@ export default {
         // find references that are being imported locally (i.e. `require("./firebase/foo")`,
         // or as an installed module (`import {foo} from firebase/bar` ) and rewrite them to
         // be full remote URLs
-        return code.replace(/(\.\/)?(?:firebase\/)([a-zA-Z]+)/g, `${REMOTE_FIREBASE_URL}/firebase-$2.js`)
+        code = code.replace(/(\.\/)?(?:@?firebase\/)([a-zA-Z]+)/g, `${REMOTE_FIREBASE_URL}/firebase-$2.js`)
+
+        // if a TOKEN is provided, replace it in the code
+        code = code.replace(/\/\* TOKEN \*\//g, `"${env.signInWithCustomToken_CUSTOM_TOKEN}"`)
+        return code
       },
       resolveDynamicImport: function(importee) {
         if (!existsSync(importee)) {
