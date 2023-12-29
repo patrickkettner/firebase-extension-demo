@@ -51,15 +51,37 @@ async function setupOffscreenDocument(path) {
   }
 }
 
+function getAuth() {
+  return new Promise(async (resolve, reject) => {
+    const auth = await chrome.runtime.sendMessage({
+      type: 'firebase-auth',
+      target: 'offscreen'
+    });
+
+    auth?.name !== 'FirebaseError' ? resolve(auth) : reject(auth);
+  })
+}
+
 async function firebaseAuth() {
   await setupOffscreenDocument(OFFSCREEN_DOCUMENT_PATH);
 
-  const auth = await chrome.runtime.sendMessage({
-    type: 'firebase-auth',
-    target: 'offscreen'
-  });
+  const auth = await getAuth()
+    .then((auth) => {
+      console.log('User Authenticated', auth)
+      return auth
+    })
+    .catch(err => {
+      if (err.code === 'auth/operation-not-allowed') {
+        console.error(`You must enable an OAuth provider in the Firebase console in order to use signInWithPopup.
+          This sample uses Google by default.
+          https://console.firebase.google.com/project/_/authentication/providers`);
+      } else {
+        console.error(err);
+        return err
+      }
+    })
+    .finally( closeOffscreenDocument )
 
-  await closeOffscreenDocument();
   return auth;
 }
 

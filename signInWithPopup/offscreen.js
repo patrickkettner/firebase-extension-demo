@@ -31,15 +31,20 @@ function handleChromeMessages(message, sender, sendResponse) {
 
   function handleIframeMessage({data}) {
     try {
+      if (data.startsWith('!_{')) {
+        // firebase sends a message to the iframe that we don't actually care about, so return early
+        return
+      }
+
       data = JSON.parse(data);
       self.removeEventListener("message", handleIframeMessage)
       sendResponse(data)
     } catch (e) {
-      console.log(`json parse failed (probably fine) - ${e.message}`)
+      console.log(`json parse failed - ${e.message}`)
     }
   }
 
-  self.addEventListener("message", handleIframeMessage, false);
+  globalThis.addEventListener("message", handleIframeMessage, false);
 
   iframe.contentWindow.postMessage('load firebase auth', new URL(_URL).origin)
 
