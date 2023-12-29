@@ -52,7 +52,7 @@ export default {
         if (env.AUTH_BUILD === 'signInWithCustomToken') {
           // if a TOKEN is provided, replace it in the code
           code = code.replace(/\/\* TOKEN \*\//g, `"${env.signInWithCustomToken_CUSTOM_TOKEN}"`)
-        } else if (env.AUTH_BUILD === 'signInWithEmailAndPassword') {
+        } else if (env.AUTH_BUILD === 'signInWithEmailAndPassword' || env.AUTH_BUILD === 'signInWithEmailLink') {
           code = removeLoadJS(this.parse(code));
         }
 

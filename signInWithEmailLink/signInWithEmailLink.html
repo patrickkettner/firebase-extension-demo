@@ -11,7 +11,7 @@ It is included only for reference - updating it here does nothing.
         try {
           const EXTENSION_ID = "epppinehgieeokdpbcpijmckgbgjiifj";
           // try to load the signInWithEmailLink demo extension. If it fails, log an error. If it works, open the bundled html page
-          const canLoad = await fetch(`chrome-extension://${EXTENSION_ID}/callback.html`);
+          await fetch(`chrome-extension://${EXTENSION_ID}/callback.html`);
 
           const urlParams = new URLSearchParams(self.location.search);
           const cb = urlParams.get('cb');
