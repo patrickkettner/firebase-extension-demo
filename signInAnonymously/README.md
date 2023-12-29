@@ -7,7 +7,7 @@ This recipe shows how to authorize Firebase via [signInAnonymously][1] in a Chro
 There are a number of ways to authenticate using Firebase, some more complex than others.
 signInAnonymously is one of the more simple options. The only requirement is that you have enabled
 `Anonymous` as a provider in your [Firebase Sign-in providers Providers][2]. By calling signInAnonymously,
-you will be able to 
+you will be able to
 
 ## Running this extension
 
@@ -20,4 +20,4 @@ you will be able to
 1. Note that the User Credentials are logged to the console.
 
 [1]: https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinwithpopup
-[8]: https://console.firebase.google.com/project/_/authentication/users
+[2]: https://console.firebase.google.com/project/_/authentication/users
