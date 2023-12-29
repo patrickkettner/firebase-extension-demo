@@ -1,4 +1,4 @@
-import { signInWithPopup, GoogleAuthProvider, getAuth } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, initializeAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from './firebaseConfig.js'
 
@@ -9,6 +9,9 @@ import firebaseConfig from './firebaseConfig.js'
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Initialize Firebase Authentication. Use this instaed of getAuth, as it
+// includes GAPI, which is not supported in Manifest v3 extensions.
+const auth = initializeAuth(app, {popupRedirectResolver: undefined});
 
 // This code runs inside of an iframe in the extension's offscreen document.
 // This is a reference to the parent frame, i.e. the offscreen document.
@@ -28,6 +31,6 @@ function sendResponse(result) {
 // extension's offscreen document.
 // To centralize logic, all respones are forwarded to the parent frame,
 // which goes onto forward them to the extension's service worker.
-signInWithPopup(getAuth(), PROVIDER)
+signInWithPopup(auth, PROVIDER)
   .then(sendResponse)
   .catch(sendResponse)

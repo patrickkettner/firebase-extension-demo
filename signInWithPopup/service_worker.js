@@ -16,7 +16,6 @@ const OFFSCREEN_DOCUMENT_PATH = '/offscreen.html';
 
 // A global promise to avoid concurrency issues
 let creating;
-let locating;
 
 // There can only be one offscreenDocument. So we create a helper function
 // that returns a boolean indicating if a document is already active.

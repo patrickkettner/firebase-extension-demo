@@ -19,7 +19,7 @@ Note that this extension sets the [`key`][9] value in the manifest.json. This wa
 1. Update firebaseConfig.js with your Firebase Config. This can be found on your Firebase dashboard.
 1. Run `npm run compile:signInWithPopup`. This will package the a specific version of the Firebase client into a single file controlled by our extension, rather than rely on an external service.
 1. Ensure that `https://positive-fanatical-machine.glitch.me` is an "Authorized domain" in your [Firebase Authentication dashboard][8]
-1. Load this directory in Chrome as an [unpacked extension][1].
+1. Load this directory in Chrome as an unpacked extension.
 1. Open the Extension menu and click the extension named "Firebase Auth - signInWithPopup".
 1. Open a console and run `let auth = await firebaseAuth()`
 
