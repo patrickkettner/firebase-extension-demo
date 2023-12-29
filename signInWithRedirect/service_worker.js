@@ -12,60 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const OFFSCREEN_DOCUMENT_PATH = '/offscreen.html';
+const url = "https://positive-fanatical-machine.glitch.me/signInWithRedirect.html"
 
-// A global promise to avoid concurrency issues
-let creating;
-let locating;
+let authWindow;
 
-// There can only be one offscreenDocument. So we create a helper function
-// that returns a boolean indicating if a document is already active.
-async function hasDocument() {
-  // Check all windows controlled by the service worker to see if one
-  // of them is the offscreen document with the given path
-  const matchedClients = await clients.matchAll();
-
-  return matchedClients.some(
-    (c) => c.url === chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH)
-  );
+// The actual auth flow is handled in signInWithRedirect.js, which is
+// a content script that is inejected into the URL listed above. Because of
+// Firebase's code choices, this content script MUST be run in the MAIN world
+// In order to get around CSP restrictions that would otherwise break us.
+// We expose the extension as externally_connectable, which allows the content
+// script to send a message to the extension, which is handled here.
+function externalMessageHandler(Resolve, message, sender, sendResponse) {
+  chrome.runtime.onMessageExternal.removeListener(externalMessageHandler);
+  chrome.tabs.remove(authWindow?.tabs[0]?.id);
+  Resolve(message);
 }
 
-async function setupOffscreenDocument(path) {
-  //if we do not have a document, we are already setup and can skip
-  if (!(await hasDocument())) {
-    // create offscreen document
-    if (creating) {
-      await creating;
-    } else {
-      creating = chrome.offscreen.createDocument({
-        url: path,
-        reasons: [
-            chrome.offscreen.Reason.DOM_SCRAPING
-        ],
-        justification: 'authentication'
-      });
+function firebaseAuth() {
+  // return a literal Promise so we can handle the resolve and reject cases
+  return new Promise(async (resolve, reject) => {
 
-      await creating;
-      creating = null;
-    }
-  }
-}
+    // If the user closes the tab before auth completes, reject the promise
+    chrome.tabs.onRemoved.addListener(tabId => {
+      if (tabId === authWindow?.tabs[0]?.id) {
+        reject('User closed tab before auth completed.');
+      }
+    });
 
-async function firebaseAuth() {
-  await setupOffscreenDocument(OFFSCREEN_DOCUMENT_PATH);
+    // Wire up the onMessageExternal listener our externalMessageHandler
+    // function. We are passing the resolve handle so it can be resolved
+    // in that function
+    chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+      externalMessageHandler(resolve, message, sender, sendResponse);
+    });
 
-  const auth = await chrome.runtime.sendMessage({
-    type: 'firebase-auth',
-    target: 'offscreen'
-  });
-
-  await closeOffscreenDocument();
-  return auth;
-}
-
-async function closeOffscreenDocument() {
-  if (!(await hasDocument())) {
-    return;
-  }
-  await chrome.offscreen.closeDocument();
+    // initiate the auth flow by opening a new window to signInWithRedirect.html
+    authWindow = await chrome.windows.create({ url })
+  })
 }
