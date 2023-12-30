@@ -25,11 +25,38 @@ let authWindow;
 // order to get around CSP restrictions that would otherwise break us, the
 // extension also configures externally_connectable. This allows the content
 // script to send a message to the extension.
-function externalMessageHandler(Resolve, message, sender, sendResponse) {
-  console.log('received message from content script', message);
-  chrome.runtime.onMessageExternal.removeListener(externalMessageHandler);
+function externalMessageHandler(Resolve, Reject, message, sender, sendResponse, promisedWrappedHandler) {
+
+  chrome.runtime.onMessageExternal.removeListener(promisedWrappedHandler);
+
+  if (message.name === 'FirebaseError') {
+    console.error('recieved error from content script', message);
+  } else {
+    console.log('received message from content script', message);
+  }
+
+  if (message.name === 'FirebaseError') {
+    const err = message;
+    if (err.code === 'auth/operation-not-allowed') {
+      console.error(`You must enable Phone as a Sign-in provider in the Firebase console in order to use signInWithPhoneNumber.
+          https://console.firebase.google.com/project/_/authentication/providers`);
+    } else if (err.code === 'auth/invalid-verification-code') {
+      console.error(`The verification code entered ("${err.verificationCode}") was not valid.`);
+    } else if (err.code === 'auth/too-many-requests') {
+      console.error(`Too many requests to the phone number ${phoneNumber}. If you are testing, consider adding ${phoneNumber} to "Phone numbers for testing (optional)" under the Phone section of the Firebase console.
+      https://console.firebase.google.com/project/_/authentication/providers
+        `);
+    } else if (err.code === 'auth/missing-code') {
+      console.error(`You need to input a verification code that was sent to ${phoneNumber}. Restart the process to try again.`);
+    } else {
+      console.error(`SMS not sent: ${err.message}`)
+    }
+    Reject(message.error);
+  } else {
+    Resolve(message);
+  }
+
   chrome.tabs.remove(authWindow?.tabs[0]?.id);
-  Resolve(message);
 }
 
 function firebaseAuth() {
@@ -46,9 +73,12 @@ function firebaseAuth() {
     // Wire up the onMessageExternal listener our externalMessageHandler
     // function. We are passing the resolve handle so it can be resolved
     // in that function
-    chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
-      externalMessageHandler(resolve, message, sender, sendResponse);
-    });
+
+    function promisedWrappedHandler(message, sender, sendResponse) {
+      externalMessageHandler(resolve, reject, message, sender, sendResponse, promisedWrappedHandler);
+    }
+
+    chrome.runtime.onMessageExternal.addListener(promisedWrappedHandler);
 
     // initiate the auth flow by opening a new window to signInWithPhoneNumber.html
     authWindow = await chrome.windows.create({ url })

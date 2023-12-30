@@ -17,10 +17,22 @@ import { initializeApp } from "firebase/app";
 import firebaseConfig from './firebaseConfig.js'
 import { parsePhoneNumber } from 'awesome-phonenumber'
 
+// This code runs as a content script, so we don't have access to the
+// chrome.runtime.id. Since the `key` is set in manifest.json, this ID can be a
+// known value. We need to have this value in order to send a message from the
+// content script to the service worker.
+const extensionID = 'ohgdbokonfjidphalnfciennigpaiako'
+
 function getPhoneNumber(promptString = 'What is your phone number, including country code?') {
   // keep a reference to the original promptString so we can use it in the error message
   let suppliedPhoneNumber = prompt(promptString);
   let phoneNumber = suppliedPhoneNumber;
+
+  // phoneNumber will be null if the user cancels the prompt. If that happens, we message the
+  // service worker so it can close this window
+  if (phoneNumber === null) {
+    return chrome.runtime.sendMessage(extensionID, { error: { code: "auth/cancelled-phone-number-request", message: "User cancelled the prompt requesting their phone number", phoneNumber: suppliedPhoneNumber}})
+  }
 
   // firebase requires phone numbers to be in E.164 format (e.g. +18885551212). If the user
   // doesn't include the required +, add one.
@@ -38,11 +50,6 @@ function getPhoneNumber(promptString = 'What is your phone number, including cou
 }
 
 (async () => {
-  // This code runs as a content script, so we don't have access to the
-  // chrome.runtime.id. Since the `key` is set in manifest.json, this ID can be a
-  // known value. We need to have this value in order to send a message from the
-  // content script to the service worker.
-  const extensionID = 'ohgdbokonfjidphalnfciennigpaiako'
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig)
@@ -82,7 +89,21 @@ function getPhoneNumber(promptString = 'What is your phone number, including cou
     // Once the user successfully completes the reCaptcha, we will need to them to provide
     // the verification code that was sent to their phone
     const testVerificationCode = prompt('what is the test verification code?')
-    const result = await confirmationResult.confirm(testVerificationCode)
+
+    // testVerificationCode will be null if the user cancels the prompt. If that happens, we message the
+    // service worker so it can close this window
+    if (testVerificationCode === null) {
+      return chrome.runtime.sendMessage(extensionID, { error: { code: "auth/cancelled-verification-code-request", message: "User cancelled the prompt requesting verification code", verificationCode: testVerificationCode}})
+    }
+
+    let result;
+
+    try {
+      result = await confirmationResult.confirm(testVerificationCode)
+    } catch (err) {
+      err.verificationCode = testVerificationCode;
+      return chrome.runtime.sendMessage(extensionID, err);
+    }
 
     // We now have a cached credential, so we send it to the service worker.
     // Since this is a content script running in the MAIN world, we need to have
@@ -91,19 +112,6 @@ function getPhoneNumber(promptString = 'What is your phone number, including cou
     // service worker the authentication result
     chrome.runtime.sendMessage(extensionID, result)
   } catch (err) {
-    if (err.code === 'auth/operation-not-allowed') {
-      console.error(`You must enable Phone as a Sign-in provider in the Firebase console in order to use signInWithPhoneNumber.
-          https://console.firebase.google.com/project/_/authentication/providers`);
-    } else if (err.code === 'auth/invalid-verification-code') {
-      console.error(`The phone number ${phoneNumber} is invalid.`);
-    } else if (err.code === 'auth/too-many-requests') {
-      console.error(`Too many requests to the phone number ${phoneNumber}. If you are testing, consider adding ${phoneNumber} to "Phone numbers for testing (optional)" under the Phone section of the Firebase console.
-      https://console.firebase.google.com/project/_/authentication/providers
-        `);
-    } else if (err.code === 'auth/missing-code') {
-      console.error(`You need to input a verification code that was sent to ${phoneNumber}. Restart the process to try again.`);
-    } else {
-      console.error(`SMS not sent: ${err.message}`)
-    }
+    chrome.runtime.sendMessage(extensionID, err)
   }
 })()
