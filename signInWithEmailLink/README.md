@@ -17,6 +17,10 @@ from the OAuth flow, and call [`signInWithEmailLink`][1]. Once successfully
 completed, the page is redirected back to [the callback page][6] hosted within
 this extension.
 
+Note that this sample uses an external server. A demo of one is provided for testing
+purposes, however you will need to update the code to be hosted on a server you
+control if you decide to implement this in production.
+
 ## Running this extension
 
 1. Clone this repository.

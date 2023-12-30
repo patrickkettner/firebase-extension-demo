@@ -4,11 +4,33 @@ This recipe shows how to authorize Firebase via [signInWithPhoneNumber][1] in a 
 
 ## Overview
 
-There are a number of ways to authenticate using Firebase, some more complex than others.
-signInWithPhoneNumber is moderately complex. In order for it to work, you must host a public webpage that acts as a proxy for the extension. This is because Firebase requires the use of [reCaptcha][2] when you use signInWithPhoneNumber, and reCaptcha only functions when loaded from their CDN. Since Manifest v3 extensions hosted on the Chrome Web Store are not allowed to use remotely hosted code, you need to run the code inside of an iframe or entire new Chrome window, and then [message][3] the result back to your [service worker][4].
-How it works specifically is that the service worker has an asyncronous function called `firebaseAuth`. This will open a new Chrome window that loads our [proxied page][5]. This extension has the compiled version of [signInWithPhoneNumber.js][6] as a content script, which will be automatically injected into that window once it has opened. signInWithPhoneNumber.js will geenrate a `div` for a container for reCaptcha, appends it into the document, and initiates [signInWithPhoneNumber][1]. The browser will prompt you for a phone number. You will need to then complete the reCaptcha challenge. After successfully being completed, the phone number you provided should recieve an SMS message with a verification code. You will get another prompt asking for that code. Once you successfully submit that code, the credentials will be resolved back to our service worker via an [externally connectable message][7].
+There are a number of ways to authenticate using Firebase, some more complex than
+others. signInWithPhoneNumber is moderately complex. In order for it to work, you
+must host a public webpage that acts as a proxy for the extension. This is because
+Firebase requires the use of [reCaptcha][2] when you use signInWithPhoneNumber,
+and reCaptcha only functions when loaded from their CDN. Since Manifest v3
+extensions hosted on the Chrome Web Store are not allowed to use remotely hosted
+code, you need to run the code inside of an iframe or entire new Chrome window,
+and then [message][3] the result back to your [service worker][4].
+How it works specifically is that the service worker has an asyncronous function
+called `firebaseAuth`. This will open a new Chrome window that loads our
+[proxied page][5]. This extension has the compiled version of [signInWithPhoneNumber.js][6]
+as a content script, which will be automatically injected into that window once
+it has opened. signInWithPhoneNumber.js will geenrate a `div` for a container for
+reCaptcha, appends it into the document, and initiates [signInWithPhoneNumber][1].
+The browser will prompt you for a phone number. You will need to then complete
+the reCaptcha challenge. After successfully being completed, the phone number you
+provided should recieve an SMS message with a verification code. You will get
+another prompt asking for that code. Once you successfully submit that code, the
+credentials will be resolved back to our service worker via an [externally connectable message][7].
 
-Note that this extension sets the [`key`][9] value in the manifest.json. This was included to maintain the same extension ID across installations. This is advantageous because it allows the [iframe that loads][10] the code to only load our code in instances where it is triggered by our extension.
+Note that this extension sets the [`key`][9] value in the manifest.json. This was
+included to maintain the same extension ID across installations. This is advantageous
+because it allows the [iframe that loads][10] the code to only load our code in
+instances where it is triggered by our extension.
+Additionally, this sample uses an external server. A demo of one is provided for testing
+purposes, however you will need to update the code to be hosted on a server you
+control if you decide to implement this in production.
 
 ## Running this extension
 
