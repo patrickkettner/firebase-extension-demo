@@ -31,7 +31,11 @@ advantageous because it allows the [iframe that loads][5] the code to only load
 our code in instances where it is triggered by our extension.  Additionally,
 this sample uses an external server. A demo of one is provided for testing
 purposes, however you will need to update the code to be hosted on a server you
-control if you decide to implement this in production.
+control if you decide to implement this in production. For convenience, the file
+that is being hosted on the public server is being loded from this project.
+However, as the generated file has code that is against the Chrome Web Store's
+policies, you must not include them if you plan on uploading an extension to the
+Chrome Web Store. You will need to host the file directly on a public web server.
 
 ## Running this extension
 

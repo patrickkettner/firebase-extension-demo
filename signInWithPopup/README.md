@@ -31,17 +31,28 @@ advantageous because it allows the [iframe that loads][10] the code to only load
 our code in instances where it is triggered by our extension.
 Additionally, this sample uses an external server. A demo of one is provided for testing
 purposes, however you will need to update the code to be hosted on a server you
-control if you decide to implement this in production.
+control if you decide to implement this in production. For convenience, the file
+that is being hosted on the public server is being loded from this project.
+However, as the generated file has code that is against the Chrome Web Store's
+policies, you must not include them if you plan on uploading an extension to the
+Chrome Web Store. You will need to host the file directly on a public web
+server.
 
 ## Running this extension
 
 1. Clone this repository.
-1. Update firebaseConfig.js with your Firebase Config. This can be found on your Firebase dashboard.
-1. Run `npm run compile:signInWithPopup`. This will package the a specific version of the Firebase client into a single file controlled by our extension, rather than rely on an external service.
-1. Ensure that `https://positive-fanatical-machine.glitch.me` is an "Authorized domain" in your [Firebase Authentication dashboard][8]
+1. Update firebaseConfig.js with your Firebase Config. This can be found on your
+   Firebase dashboard.
+1. Run `npm run compile:signInWithPopup`. This will package the a specific
+   version of the Firebase client into a single file controlled by our
+extension, rather than rely on an external service.
+1. Ensure that `https://positive-fanatical-machine.glitch.me` is an "Authorized
+   domain" in your [Firebase Authentication dashboard][8]
 1. Load this directory in Chrome as an unpacked extension.
-1. Open the Extension menu and click the extension named "Firebase Auth - signInWithPopup".
+1. Open the Extension menu and click the extension named "Firebase Auth -
+   signInWithPopup".
 1. Open a console and run `let auth = await firebaseAuth()`
+
 
 [1]: https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinwithpopup
 [2]: https://developer.chrome.com/docs/extensions/reference/offscreen/
