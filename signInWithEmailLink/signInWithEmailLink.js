@@ -2,7 +2,7 @@ import {initializeAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWith
 import { initializeApp } from "firebase/app";
 import firebaseConfig from './firebaseConfig.js'
 
-const email = "patrick@patrickkettner.com"; // Set this to the email you want to sign in with
+const email = undefined; // Set this to the email you want to sign in with
 
 if (email === undefined) {
   throw new Error('You need to set the email variable in signInWithEmailLink.js')
