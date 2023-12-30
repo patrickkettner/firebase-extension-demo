@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Firebase Auth - signInWithCredential",
+  "description": "This sample shows how to authorize Firebase via signInWithCredential in a Chrome extension with manifest v3",
+  "version": "0.1",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "offscreen",
+    "identity"
+  ],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [ "signInWithCredential_background.js" ],
+      "matches": [ "https://positive-fanatical-machine.glitch.me/*" ]
+    }
+  ],
+  "key":"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApyh/zZpBzFCp4yf5BfdwAoPeUAIXDbFfwNqZ8Sg3z73a3W0qb7sY9cC6kQTt3/9zghU/eWYVbmKjs++uj/CSdKNhhP6ISP0j+SUcc+70GKdfA50RzWStyrEhDu6l/j0ZqyRXdGVVquupWOmlqygtxN9dY+O2eSv59N7FnkkY6Iq9m+U26tjwxyuWXD8Tr6QGCm2RdKLONNVLLA2k0MUKbvIWJhb3zsuv0bd/NjkRuEsdtd0/xMmdsMfc/XGz85/wqxg7qzQaTxzGkWLzunGCG8rfPG4boi0fYTHCeIvkp7sW/CP2Mmk99kIos6ZcwhyNOmBEV0Eb4z3eVckM9hpcewIDAQAB"
+}

@@ -1,0 +1,23 @@
+.authProviderOption {
+  display: none;
+  border: none;
+}
+
+label {
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.selected {
+  display: block;
+}
+
+.success {
+  border: 5px solid green;
+  display: block
+}
+
+.error {
+  border: 5px solid red;
+  display: block
+}
