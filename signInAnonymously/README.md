@@ -19,5 +19,5 @@ you will be able to
 1. Click on the link in "Inspect views: service worker" to open Chrome Devtools for this extension
 1. Note that the User Credentials are logged to the console.
 
-[1]: https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinwithpopup
+[1]: https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinanonymously
 [2]: https://console.firebase.google.com/project/_/authentication/users
