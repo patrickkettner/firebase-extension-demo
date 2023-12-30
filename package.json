@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile:signInWithCredential": "npx rollup ./signInWithCredential/signInWithCredential.js --config ./rollup.config.mjs -o ./signInWithCredential/signInWithCredential_background.js",
     "compile:signInWithCustomToken": "AUTH_BUILD='signInWithCustomToken' signInWithCustomToken_CUSTOM_TOKEN=`node ./signInWithCustomToken/getToken.js` npx rollup ./signInWithCustomToken/signInWithCustomToken.js --config ./rollup.config.mjs -o ./signInWithCustomToken/compiled.js",
     "compile:signInWithEmailAndPassword": "AUTH_BUILD='signInWithEmailAndPassword' npx rollup ./signInWithEmailAndPassword/signInWithEmailAndPassword.js --config ./rollup.config.mjs -o ./signInWithEmailAndPassword/compiled.js",
     "compile:signInAnonymously": "npx rollup ./signInAnonymously/signInAnonymously.js --config ./rollup.config.mjs -o ./signInAnonymously/compiled.js",
